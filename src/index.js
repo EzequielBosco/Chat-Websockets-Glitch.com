@@ -1,6 +1,5 @@
 const realTimeServer = require('./realTimeServer')
 const app = require('./app')
-// const {Server} = require('socket.io')
 
 const port = 3000
 const httpServer = app.listen(`${port}`, () => {
@@ -8,9 +7,3 @@ const httpServer = app.listen(`${port}`, () => {
 })
 
 realTimeServer(httpServer)
-
-// socketServer.on('connection', socket => {
-//     socket.on('message', payload => {
-//         console.log(payload, socket.id)
-//     })
-// })

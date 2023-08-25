@@ -1,20 +1,21 @@
 socket = io()
 
-// const user = {
-//     name: 'Guest'
-// }
-
-// socket.emit('message', user)
-
 const chatBox = document.getElementById('chat-box')
+
+const userColors = {}
+
+function generateRandomColor() {
+    return '#' + Math.floor(Math.random()*16777215).toString(16)
+}
 
 const chat = async (chatBox) => {
     const swal = await Swal.fire({
-        title: "Inicio se sesión",
+        title: "Inicio de sesión",
         input: "text",
-        text: "ingresa tu usuario",
+        text: "Ingresa con tu nombre",
+        confirmButtonText: "Entrar",
         inputValidator: value => {
-            return !value && "Necesitas ingresar un usuario"
+            return !value && "Necesitas ingresar un nombre"
         },
         allowOutsideClick: false
     })
@@ -32,17 +33,33 @@ const chat = async (chatBox) => {
         }
     })
 
+    if (!userColors[user]) {
+        userColors[user] = generateRandomColor()
+    }
+
+    socket.on('userColors', (colors) => {
+        Object.assign(userColors, colors)
+        updateMessageLogs()
+    })
+
     socket.on('messageLogs', data => {
+        messageLogs = data
+        updateMessageLogs()
+    })
+
+    function updateMessageLogs() {
         const log = document.getElementById('message-logs')
         let messages = ''
-        data.forEach(message => {
-            const user = message.user.charAt(0).toUpperCase() + message.user.slice(1)
-            messages += `${user} dice: ${message.message}<br>`
-        }
-        )
-
+    
+        messageLogs.forEach(message => {
+          const user = message.user.charAt(0).toUpperCase() + message.user.slice(1)
+          const userColor = userColors[message.user]
+    
+          messages += `<span style="color: ${userColor};">${user}</span>: ${message.message}<br>`
+        })
+    
         log.innerHTML = messages
-    })
+    }
 
     socket.on('newUser', data => {
         Swal.fire({
@@ -57,10 +74,3 @@ const chat = async (chatBox) => {
 }
 
 chat(chatBox)
-
-// Swal.fire({
-//     title: "Welcome to the chat!",
-//     input: "text",
-//     text: "ingresa tu usuario",
-//     icon: "success"
-// })

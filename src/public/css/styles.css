@@ -1,0 +1,26 @@
+body {
+    background-color: rgb(53, 53, 53);
+    color: rgb(233, 233, 233);
+    margin: 2px;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+}
+
+.sub-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+input {
+    padding: 5px;
+}
+
+.chat {
+    margin: 40px;
+}
